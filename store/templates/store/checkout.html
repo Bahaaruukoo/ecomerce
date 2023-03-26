@@ -1,0 +1,117 @@
+{% extends 'store/layouts/main.html' %}
+
+{% block content %}
+               
+<div class="py-3 bg-primary"> 
+    <div class="container">
+        <a class="text-white" href="{% url 'home'%}">Home /</a>
+        <a class="text-white" href="{% url 'checkout'%}">Checkout /</a>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <form action="{% url 'placeorder' %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card shadow ">
+                    <div class="card-body checkoutform">
+                        <h6>Basic Details</h6>
+                        <hr>
+                        <div class="row my-2">
+                            <div class="col-md-6">  
+                                <label>Enter first name </label>                      
+                                <input required type="text" value="{{request.user.first_name}}" class="form-control" name="fname" placeholder="First name">
+                            </div> 
+                            <div class="col-md-6">
+                                <label>Enter last name </label>                          
+                                <input required type="text" value="{{request.user.last_name}}" class="form-control" name="lname" placeholder="Last name">
+                            </div>                        
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-6"> 
+                                <label>Enter email address </label>                         
+                                <input required type="text" value="{{request.user.email}}" class="form-control" name="email" placeholder="Email">
+                            </div> 
+                            <div class="col-md-6"> 
+                                <label>Enter phone numner </label>                         
+                                <input required type="text" value="{{userprofile.phone}}" class="form-control" name="phone" placeholder="Phone number">
+                            </div>                        
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">   
+                                <label>Enter full address </label>     
+                                <textarea required type="text"  class="form-control" name="address" placeholder="Address">{{userprofile.address}}</textarea>
+                            </div>                                                 
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-6"> 
+                                <label>Enter city </label>  
+                                <input required type="text" value="{{userprofile.city}}" class="form-control" name="city" placeholder="City">
+                        </div>                         
+                            <div class="col-md-6">      
+                                <label>Enter State </label>                      
+                                <input required type="text" value="{{userprofile.state}}" class="form-control" name="state" placeholder="State">
+                            </div>                        
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-6">  
+                                <label>Enter Country </label>                        
+                                <input required type="text" value="{{userprofile.country}}" class="form-control" name="country" placeholder="Country">
+                            </div> 
+                            <div class="col-md-6">  
+                                <label>Enter pin number </label>                        
+                                <input required type="text" value="{{userprofile.pincode}}" class="form-control" name="pincode" placeholder="pin Code">
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">       
+                <div class="card shadow">  
+                    <div class="card-body">  
+                        <h6 class="text-center">Order Summary</h6>
+                        <hr>       
+                        
+                        {% if cartitems %}
+                            <table class="table table-stripeds table-bordereds">
+                                <head>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </head>
+                                <tbody>
+                                    {% for item in cartitems %}
+                                        <tr>
+                                            <td> 
+                                                <img src="{{ item.product.product_image.url }}" height="50px" width="50px" class="me-3">
+                                                {{item.product.name}} </td>
+                                            <td> {{item.product_qty}} </td>
+                                            <td> {{item.product.selling_price}} </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                            <h6 class="fw-bold">Grand Total <span class="float-end me-3"> $ {{total_price}}</span></h6>
+                            <input type="hidden" value="COD" name="payment_mode">
+                            <div class="my-3">
+                                <button type="submit" class="btn btn-success w-100"> COD | Place Order </button>
+                                 <!-- Set up a container element for the button -->
+                                <div class="mt-2" id="paypal-button-container"></div>
+                            </div>
+                        {% else %}
+                            <h4>Your cart is empty</h4>
+                        {% endif %}
+                            
+                    </div>           
+                </div>      
+            </div>    
+        </div>
+    </form>
+</div>
+
+
+{% endblock content %}
